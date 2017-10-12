@@ -1025,6 +1025,7 @@ static update_flags player_view_update_at(const coord_def &gc)
         ret |= update_flag::AFFECT_EXCLUDES;
 
     set_terrain_visible(gc);
+    set_terrain_visited(gc);
 
     if (!(env.pgrid(gc) & FPROP_SEEN_OR_NOEXP))
     {

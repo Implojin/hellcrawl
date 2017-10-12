@@ -31,6 +31,7 @@ struct cloud_info
 #define MAP_INVISIBLE_MONSTER   0x10
 #define MAP_DETECTED_ITEM       0x20
 #define MAP_VISIBLE_FLAG        0x40
+#define MAP_VISITED_FLAG        0x80
 #define MAP_GRID_KNOWN          0xFF
 
 #define MAP_EMPHASIZE          0x100
@@ -118,7 +119,7 @@ struct map_cell
     void clear_data()
     {
         const uint32_t f = flags & (MAP_SEEN_FLAG | MAP_CHANGED_FLAG
-                                    | MAP_INVISIBLE_UPDATE);
+                                    | MAP_INVISIBLE_UPDATE | MAP_VISITED_FLAG);
         clear();
         flags = f;
     }
@@ -296,6 +297,11 @@ struct map_cell
         return !!(flags & MAP_MAGIC_MAPPED_FLAG);
     }
 
+    bool visited() const
+    {
+        return !!(flags & MAP_VISITED_FLAG);
+    }
+
     trap_type trap() const
     {
         return _trap;
@@ -317,6 +323,8 @@ void set_terrain_seen(const coord_def c);
 
 void set_terrain_visible(const coord_def c);
 void clear_terrain_visibility();
+
+void set_terrain_visited(const coord_def c);
 
 int count_detected_mons();
 

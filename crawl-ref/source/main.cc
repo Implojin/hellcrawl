@@ -1909,6 +1909,9 @@ static void _toggle_travel_speed()
 
 static void _do_rest()
 {
+    mpr("Your health and mana are leaking away -- Resting would be suicidal!");
+    return;
+    
     if (i_feel_safe())
     {
         if ((you.hp == you.hp_max || !player_regenerates_hp())

@@ -8,6 +8,7 @@
 #include "env.h"
 #include "godpassive.h" // passive_t::auto_map
 #include "notes.h"
+#include "player-stats.h" // for set_terrain_visited, inc_hp(), inc_mp() // TODO: don't put this here
 #include "religion.h"
 #include "terrain.h"
 #ifdef USE_TILE
@@ -109,6 +110,10 @@ void set_terrain_seen(const coord_def pos)
     if (!(cell->flags & MAP_SEEN_FLAG))
     {
         _automap_from(pos.x, pos.y, _map_quality());
+        /*
+        mpr("Setting visited, incrementing regen.");
+        inc_hp(1);
+        inc_mp(1);*/
 
         if (!is_boring_terrain(feat))
         {
@@ -142,6 +147,20 @@ void clear_terrain_visibility()
     for (auto c : env.visible)
         env.map_knowledge(c).flags &= ~MAP_VISIBLE_FLAG;
     env.visible.clear();
+}
+
+void set_terrain_visited(const coord_def bc)
+{
+    map_cell* cell = &env.map_knowledge(bc);
+    
+    if ((cell->flags & MAP_SEEN_FLAG) && !(cell->flags & MAP_VISITED_FLAG))
+    {
+        mpr("Setting visited, incrementing regen.");
+        inc_hp(1);
+        inc_mp(1);
+    }
+    //cell->flags &= (~MAP_CHANGED_FLAG);
+    cell->flags |= MAP_VISITED_FLAG;
 }
 
 void map_cell::set_detected_item()
